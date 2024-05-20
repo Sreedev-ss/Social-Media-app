@@ -1,0 +1,10 @@
+import dotenv from 'dotenv';
+import userRoute from './webserver/routes/user.routes';
+import connectDatabase from './database/mongodb/mongodb';
+import { createServer } from './webserver/server';
+dotenv.config();
+const app = createServer();
+connectDatabase();
+app.use('/user', userRoute);
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`USER SERVICE RUNNING ON PORT ${PORT}`));
