@@ -15,40 +15,50 @@ class UserController {
 
     const newUser = new User({ id: "", username, name, password, email, dob });
 
-    if (!UserValidator.validateUsername(username)) {
+    if (username == undefined || !UserValidator.validateUsername(newUser.username)) {
       return res.status(400).json({ error: "Invalid username" });
     }
 
-    if (!UserValidator.validateEmail(email)) {
+    if (!UserValidator.validateEmail(newUser.email)) {
+      console.log('hi')
       return res.status(400).json({ error: "Invalid email" });
     }
 
-    if (!UserValidator.validateName(name)) {
+    if (name == undefined || !UserValidator.validateName(newUser.name)) {
       return res.status(400).json({ error: "Invalid name" });
     }
 
-    if (!UserValidator.validatePassword(password)) {
+    if (!UserValidator.validatePassword(newUser.password)) {
       return res.status(400).json({
         error:
           "Password should contain at least one uppercase, one symbol, and minimum 8 characters",
       });
     }
 
-    const isValidDOB: boolean = await UserValidator.validateDOB(dob);
-    if (!isValidDOB) {
-      return res.status(400).json({ error: "Invalid age" });
-    }
-
     try {
+      const isValidDOB: boolean = await UserValidator.validateDOB(newUser.dob);
+      if (!isValidDOB) {
+        return res.status(400).json({
+          error:
+            "Dob is out of bound; it should fall within the range of 13 to 150 years old.",
+        });
+      }
       const createdUser: User = await this.createUser.execute(newUser);
+
       return res.status(201).json(createdUser);
-    } catch (error:any) {
+    } catch (error: any) {
       if (error.message === "User already exists") {
         return res.status(409).json({ error: "User already exists" });
       }
-      return res.status(500).json({ error: "Internal Server Error" });
+      return res
+        .status(500)
+        .json({
+          error: error.message ? error.message : "Internal Server Error",
+        });
     }
   }
+
+
 }
 
 export default UserController;

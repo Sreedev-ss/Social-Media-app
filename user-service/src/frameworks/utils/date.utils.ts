@@ -1,10 +1,11 @@
 const dobRegex: RegExp =
-  /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-((19[0-9][0-9])|(20[0-1][0-9]))$/;
+/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/;
 
 function isValidDOB(dob: string): boolean {
   // Check if the input matches the DD-MM-YYYY format
   if (!dobRegex.test(dob)) {
-    return false;
+    // return false;
+    throw new Error("Invalid DOB")
   }
 
   // Split the input into day, month, and year components
