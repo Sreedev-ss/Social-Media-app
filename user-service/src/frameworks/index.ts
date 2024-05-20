@@ -1,13 +1,10 @@
 import dotenv from 'dotenv';
 import userRoute from './webserver/routes/user.routes';
-import connectDatabase from './database/mongodb/mongodb';
 import { createServer } from './webserver/server';
 
 dotenv.config();
 
 const app: any = createServer();
-
-connectDatabase();
 
 app.use('/user', userRoute);
 

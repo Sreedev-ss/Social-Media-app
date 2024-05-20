@@ -4,18 +4,9 @@ import mongoose from "mongoose";
 
 dotenv.config();
 
-const connectDatabase = async (): Promise<void> => {
-  try {
-    const dbURL: string | undefined = process.env.DB_URL;
-    if (!dbURL) {
-      throw new Error("DB_URL environment variable is not defined");
-    }
-    await mongoose.connect(dbURL);
-    console.log("Database connected");
-  } catch (error) {
-    console.error("Database connection error:", error);
-    process.exit(1);
-  }
-};
+const dbURL: string = process.env.dbURL;
+const db =  mongoose.createConnection(dbURL);
+db.on("error", (error) => console.log(error));
+db.once("open", () => console.log("Database connected"));
 
-export default connectDatabase;
+export default db;

@@ -5,8 +5,6 @@ import CreateUser from '../../../core/useCase/createUser';
 import UserController from '../../../adapters/controllers/user.controller';
 import { UserModel } from '../../database/models/userSchema';
 
-
-
 const router = express.Router();
 
 const userRepository = new UserRepository(UserModel);
