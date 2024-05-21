@@ -1,17 +1,14 @@
 import { Document, Model, Schema, default as mongoose } from "mongoose";
 import bcrypt from "bcrypt";
+import { IUser } from "../../../core/entity/user.entity";
 
-interface IUser extends Document {
-  name: string;
-  email: string;
-  username: string;
-  password: string;
-  dob: string;
-}
+interface IUserDocument extends IUser, Document {
+  id: string;
+};
 
-interface IUserModel extends Model<IUser> {}
+interface IUserModel extends Model<IUserDocument> { }
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUserDocument>(
   {
     name: {
       type: String,
@@ -41,8 +38,8 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-userSchema.pre<IUser>("save", async function (this: IUser, next) {
-  const user = this;
+userSchema.pre<IUserDocument>("save", async function (this: IUser, next) {
+  const user = this as IUserDocument;
   if (!user.isModified("password")) {
     return next();
   }
@@ -55,7 +52,7 @@ userSchema.pre<IUser>("save", async function (this: IUser, next) {
   }
 });
 
-const UserModel: IUserModel = mongoose.model<IUser, IUserModel>(
+const UserModel: IUserModel = mongoose.model<IUserDocument, IUserModel>(
   "User",
   userSchema
 );

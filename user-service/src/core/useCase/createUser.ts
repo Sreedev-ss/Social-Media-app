@@ -5,13 +5,9 @@ class CreateUser {
         this.userRepository = userRepository;
     }
 
-    async execute(user: any): Promise<any> {
-        const existingUser = await this.userRepository.findByUsername(user.username);
-        if (existingUser) {
-            throw new Error("User already exists");
-        }
-
-        return this.userRepository.save(user);
+    async execute(user: any): Promise<object> {
+        const data = this.userRepository.save(user);
+        return data;
     }
 }
 
