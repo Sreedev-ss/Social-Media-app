@@ -1,20 +1,55 @@
 import { Model } from 'mongoose';
+import { IUser } from '../entity/user.entity';
+import { createError } from '../../frameworks/utils/createError';
+import { EncryptionService } from '../../frameworks/utils/bcrypt';
+import { IUserRepository } from '../interfaces/IUserRepository';
+import { IUserDocument } from '../../frameworks/database/models/userSchema';
 
-class UserRepository {
-  private readonly UserModel: Model<any>;
 
-  constructor(UserModel: Model<any>) {
+class UserRepository implements IUserRepository {
+  private readonly UserModel: Model<IUserDocument>;
+  private readonly encryptionService: EncryptionService;
+
+  constructor(UserModel: Model<IUserDocument>, encryptionService: EncryptionService) {
     this.UserModel = UserModel;
+    this.encryptionService = encryptionService;
   }
 
-  async findByUsername(username: string): Promise<any> {
+  async findByUsername(username: string): Promise<IUser | null> {
     const user = await this.UserModel.findOne({ username });
-    return user;
+    return user ? (user.toObject() as IUser) : null;
   }
 
-  async save(user: any): Promise<any> {
+  async findByEmail(email: string): Promise<IUser | null> {
+    const user = await this.UserModel.findOne({ email });
+    return user ? (user.toObject() as IUser) : null;
+  }
+
+  async save(user: IUser): Promise<IUser | null> {
     const createdUser = await this.UserModel.create(user);
-    return createdUser;
+    return createdUser ? (createdUser.toObject() as IUser) : null;
+  }
+
+  async userVerification(user: IUser): Promise<IUser | null> {
+    const { email, password, username } = user;
+
+    let existingUser: IUser | null;
+
+    if (!email) {
+      existingUser = await this.findByUsername(username);
+    } else {
+      existingUser = await this.findByEmail(email);
+    }
+
+    if (!existingUser) {
+      createError('NOT_FOUND', 'User not found');
+    }
+
+    const passwordCheck = await this.encryptionService.comparePasswords(password, existingUser.password);
+    if (passwordCheck) {
+      return existingUser;
+    }
+    createError('NOT_FOUND', 'Incorrect password');
   }
 }
 

@@ -7,7 +7,7 @@ export const expressCallBack = (controller: any) => {
             res.send(response)
         } catch (error) {
             const statusCode = error?.statusCode ? error.statusCode : 500;
-            res.status(statusCode).send(error.message || 'Internal Server Error');
+            res.status(statusCode).json({code: statusCode, error: error.message || 'Internal Server Error'});
         }
     }
 }

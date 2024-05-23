@@ -1,5 +1,5 @@
 import { Document, Model, Schema, default as mongoose } from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { IUser } from "../../../core/entity/user.entity";
 
 interface IUserDocument extends IUser, Document {
@@ -57,4 +57,4 @@ const UserModel: IUserModel = mongoose.model<IUserDocument, IUserModel>(
   userSchema
 );
 
-export { IUser, IUserModel, UserModel };
+export { IUser, IUserModel, IUserDocument, UserModel };

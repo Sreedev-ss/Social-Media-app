@@ -1,12 +1,15 @@
-class CreateUser {
-    private userRepository: any;
+import { IUser } from "../entity/user.entity";
+import { IUserRepository } from "../interfaces/IUserRepository";
 
-    constructor(userRepository: any) {
+class CreateUser {
+    private userRepository: IUserRepository;
+
+    constructor(userRepository: IUserRepository) {
         this.userRepository = userRepository;
     }
 
-    async execute(user: any): Promise<object> {
-        const data = this.userRepository.save(user);
+    async execute(user: IUser): Promise<object | null> {
+        const data = await this.userRepository.save(user);
         return data;
     }
 }

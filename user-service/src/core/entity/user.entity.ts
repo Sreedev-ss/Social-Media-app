@@ -1,10 +1,10 @@
 export interface IUser {
   id?: string;
-  username: string;
-  name: string;
-  email: string;
-  password: string;
-  dob: string;
+  username?: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  dob?: string;
 }
 
 class User implements IUser {
