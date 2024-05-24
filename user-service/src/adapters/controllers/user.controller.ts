@@ -2,9 +2,12 @@
 import UserValidator from "../validators/user.validator";
 import User from "../../core/entity/user.entity";
 import { createError } from "../../frameworks/utils/createError";
-import { Request } from "express";
+import { Request, Response } from "express";
 import CreateUser from "../../core/useCase/createUser";
 import LoginUser from "../../core/useCase/loginUser";
+import { generateAccessToken, generateRefreshToken } from "../../frameworks/utils/jwt";
+import { IUserDocument } from "../../frameworks/database/models/userSchema";
+import { RequestUser } from "../../frameworks/webserver/routes/index.routes";
 
 class UserController {
   private createUser: CreateUser;
@@ -15,7 +18,7 @@ class UserController {
     this.loginUser = loginUser;
   }
 
-  async signup(req: Request): Promise<any> {
+  async signup(req:RequestUser, res: Response): Promise<any> {
     const { username, name, password, email, dob } = req.body;
 
     const newUser = new User({ username, name, password, email, dob });
@@ -41,14 +44,23 @@ class UserController {
       if (!isValidDOB) {
         createError("BAD_REQUEST", "Dob is out of bound; it should fall within the range of 13 to 150 years old.");
       }
+
       const createdUser = await this.createUser.execute(newUser);
-      return createdUser;
+      const accessToken = generateAccessToken(createdUser as IUserDocument);
+      const refreshToken = generateRefreshToken(createdUser as IUserDocument);
+      req.user = createdUser;
+      res.cookie('refresh-token', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+      })
+
+      return { token: accessToken };
     } catch (error: any) {
       throw error
     }
   }
 
-  async logUser(req: Request): Promise<any> {
+  async logUser(req: RequestUser, res: Response): Promise<any> {
     const { email, password, username } = req.body;
 
     if (!email && !username) {
@@ -59,7 +71,7 @@ class UserController {
     }
 
     try {
-      let user;
+      let user: object;
       if (email) {
         user = await this.loginUser.execute({ email, password });
       } else if (username) {
@@ -69,8 +81,17 @@ class UserController {
       if (!user) {
         createError("NOT_FOUND", "User not found or invalid credentials");
       }
+      const accessToken = generateAccessToken(user as IUserDocument);
+      const refreshToken = generateRefreshToken(user as IUserDocument);
 
-      return user;
+      req.user = user;
+      
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+      })
+
+      return { token: accessToken };
     } catch (error: any) {
       throw error;
     }

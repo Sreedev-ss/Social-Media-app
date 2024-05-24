@@ -1,10 +1,15 @@
 import dotenv from 'dotenv';
+
+if (process.env.NODE_ENV === 'production') {
+    dotenv.config({ path: '.env.production' });
+} else {
+    dotenv.config({ path: '.env.development' });
+    
+}  
+
 import { createServer } from './webserver/server';
 import connectDatabase from './database/mongodb/mongodb';
 import routes from './webserver/routes/index.routes';
-
-dotenv.config();
-
 const app: any = createServer();
 
 connectDatabase();

@@ -32,7 +32,6 @@ class UserRepository implements IUserRepository {
 
   async userVerification(user: IUser): Promise<IUser | null> {
     const { email, password, username } = user;
-
     let existingUser: IUser | null;
 
     if (!email) {

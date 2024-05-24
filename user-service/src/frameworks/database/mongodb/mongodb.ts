@@ -1,10 +1,7 @@
-// src/frameworks/database.ts
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-dotenv.config();
-
 const connectDatabase = async (): Promise<void> => {
+  
   try {
     const dbURL: string = process.env.dbURL;
     await mongoose.connect(dbURL);
