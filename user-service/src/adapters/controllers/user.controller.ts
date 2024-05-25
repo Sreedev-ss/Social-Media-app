@@ -77,15 +77,12 @@ class UserController {
       } else if (username) {
         user = await this.loginUser.execute({ username, password });
       }
-
       if (!user) {
         createError("NOT_FOUND", "User not found or invalid credentials");
       }
       const accessToken = generateAccessToken(user as IUserDocument);
       const refreshToken = generateRefreshToken(user as IUserDocument);
 
-      req.user = user;
-      
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production'
@@ -96,6 +93,19 @@ class UserController {
       throw error;
     }
   }
+
+  async logoutUser(req:RequestUser, res: Response): Promise<any> {
+    try {
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+      });
+      return { message: 'Logged out successfully' }; 
+    } catch (error) {
+      throw createError('INTERNAL_SERVER_ERROR', 'Failed to logout');
+    }
+  }
+
 }
 
 

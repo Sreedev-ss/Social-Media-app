@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { RequestUser } from "./routes/index.routes";
 
 export const expressCallBack = (controller: any) => {

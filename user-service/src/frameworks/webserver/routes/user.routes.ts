@@ -6,7 +6,8 @@ import { UserModel } from '../../database/models/userSchema';
 import { expressCallBack } from '../express';
 import { EncryptionService } from '../../utils/bcrypt';
 import LoginUser from '../../../core/useCase/loginUser';
-import { authenticate, isLoggedIn,  } from '../../middlewares/authenticate';
+import { authenticate, checkLoggedIn, isLoggedIn, } from '../../middlewares/authenticate';
+import { RequestUser } from './index.routes';
 
 const router = express.Router();
 const encryptionService = new EncryptionService();
@@ -16,9 +17,13 @@ const loginUser = new LoginUser(userRepository)
 const userController = new UserController(createUser, loginUser);
 
 router.post('/signup', expressCallBack(userController.signup.bind(userController)));
-router.post('/login', isLoggedIn, expressCallBack(userController.logUser.bind(userController)));
+router.post('/login', isLoggedIn, checkLoggedIn, expressCallBack(userController.logUser.bind(userController)));
+router.post('/logout', expressCallBack(userController.logoutUser.bind(userController)))
 
-router.get('/',authenticate, (req, res) => {
+
+
+
+router.get('/', authenticate, (req: RequestUser, res) => {
     res.send('hiiiii')
 })
 export default router;

@@ -11,7 +11,6 @@ export const authenticate = (req: RequestUser, res: Response, next: NextFunction
     if (!token) return res.sendStatus(401);
     try {
         const decoded = verifyAccessToken(token);
-
         req.user = decoded;
         console.log(new Date(req.user.exp * 1000).toLocaleString())
         next();
@@ -21,13 +20,22 @@ export const authenticate = (req: RequestUser, res: Response, next: NextFunction
 }
 
 export const isLoggedIn = (req: RequestUser, res: Response, next: NextFunction) => {
-    console.log(req.user) //TODO  BUG : this becoming undefined
+    const token = req.headers['authorization']?.split(' ')[1];
+    if (!token) {
+      return next();
+    }
+    try {
+      const decoded = verifyAccessToken(token);
+      req.user = decoded; 
+      next();
+    } catch (err) {
+      return next(); 
+  };
+}
+
+export const checkLoggedIn = (req: RequestUser, res: Response, next: NextFunction) => {
     if (req.user) {
         return res.status(403).send('You are already logged in.')
     }
     next();
-
-
 }
-
-
