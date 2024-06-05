@@ -52,9 +52,13 @@ userSchema.pre<IUserDocument>("save", async function (this: IUser, next) {
   }
 });
 
+userSchema.set('toJSON', {
+  transform: (doc, { __v, password, ...rest }, options) => rest
+})
+
 const UserModel: IUserModel = mongoose.model<IUserDocument, IUserModel>(
   "User",
   userSchema
 );
 
-export { IUser, IUserModel, IUserDocument, UserModel };
+export { IUserModel, IUserDocument, UserModel };
