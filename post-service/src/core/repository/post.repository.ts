@@ -9,11 +9,17 @@ class PostRepository implements IPostRepository {
     constructor(PostModel: Model<IPostDocument>) {
         this.PostModel = PostModel;
     }
-    
+
     async save(post: IPost): Promise<any> {
         const createdPost = await this.PostModel.create(post);
         return createdPost;
     }
+
+    async findPost(): Promise<Array<IPost> | null> {
+        const allPosts = await this.PostModel.find({})
+        return allPosts;
+    }
+
 }
 
 export default PostRepository;
