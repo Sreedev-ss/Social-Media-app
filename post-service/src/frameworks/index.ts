@@ -10,12 +10,13 @@ if (process.env.NODE_ENV === 'production') {
 import { createServer } from './webserver/server';
 import connectDatabase from './database/mongodb/mongodb';
 import routes from './webserver/routes/index.routes';
+
 const app: any = createServer();
 
 connectDatabase();
- 
+
 routes(app)
 
-const PORT: any = process.env.PORT || 4000;
+const PORT: any = process.env.PORT || 4001;  
 
-app.listen(PORT, () => console.log(`USER SERVICE RUNNING ON PORT ${PORT}`));
+app.listen(PORT, () => console.log(`POST SERVICE RUNNING ON PORT ${PORT}`));

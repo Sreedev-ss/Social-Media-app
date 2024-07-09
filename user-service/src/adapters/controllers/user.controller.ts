@@ -1,4 +1,3 @@
-
 import UserValidator from "../validators/user.validator";
 import User from "../../core/entity/user.entity";
 import { createError } from "../../frameworks/utils/createError";
