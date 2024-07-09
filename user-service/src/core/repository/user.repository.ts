@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { IUser } from '../entity/user.entity';
-import { createError } from '../../frameworks/utils/createError';
-import { EncryptionService } from '../../frameworks/utils/bcrypt';
+import { createError } from '../utils/createError';
+import { EncryptionService } from '../utils/bcrypt';
 import { IUserRepository } from '../interfaces/IUserRepository';
 import { IUserDocument } from '../../frameworks/database/models/userSchema';
 

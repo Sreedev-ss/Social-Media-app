@@ -1,6 +1,6 @@
 import { Document, Model, Schema, default as mongoose } from "mongoose"
 import { IPost } from "../../../core/entity/post.entity";
-import { mediaSchema } from "./mediaSchema";
+
 
 interface IPostDocument extends IPost, Document {
     id: string;
@@ -18,7 +18,10 @@ const postSchema = new Schema<IPostDocument>(
             type: String,
             required: true,
         },
-        mediaFiles: [mediaSchema],
+        imageName: {
+            type:String,
+            required:true
+        },
     },
     {
         timestamps: true

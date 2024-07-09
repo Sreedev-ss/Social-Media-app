@@ -1,4 +1,4 @@
-import { isValidDOB } from "../../frameworks/utils/date.utils";
+import { isValidDOB } from "../../core/utils/date.utils";
 
 class UserValidator {
   private static usernameRegex: RegExp = /^[\w](?!.*?\.{2})[\w.]{1,28}[\w]$/;

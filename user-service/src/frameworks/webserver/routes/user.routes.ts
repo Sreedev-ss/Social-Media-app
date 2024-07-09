@@ -4,7 +4,7 @@ import CreateUser from '../../../core/useCase/createUser';
 import UserController from '../../../adapters/controllers/user.controller';
 import { UserModel } from '../../database/models/userSchema';
 import { expressCallBack } from '../express';
-import { EncryptionService } from '../../utils/bcrypt';
+import { EncryptionService } from '../../../core/utils/bcrypt';
 import LoginUser from '../../../core/useCase/loginUser';
 import { authenticate, checkLoggedIn, isLoggedIn, } from '../../middlewares/authenticate';
 import { RequestUser } from './index.routes';

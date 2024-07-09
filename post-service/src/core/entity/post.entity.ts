@@ -1,27 +1,21 @@
-export interface IMedia {
-    imageName:string;
-    type:'image' | 'video' | 'other';
-    metadata : Record<string,string>
-}
-
 export interface IPost {
     id?: string;
     content?: string;
     userId?: string;
-    mediaFiles?: IMedia[];
+    imageName?:string
 }
 
 class Post implements IPost {
     id:string;
     content: string;
     userId: string;
-    mediaFiles: IMedia[];
+    imageName:string
 
-    constructor({id, content, userId, mediaFiles}:IPost){
+    constructor({id, content, userId,imageName}:IPost){
         this.id = id;
         this.content = content;
         this.userId = userId;
-        this.mediaFiles = mediaFiles;
+        this.imageName = imageName;
     }
 }
 

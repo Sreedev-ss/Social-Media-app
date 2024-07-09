@@ -1,10 +1,10 @@
 import UserValidator from "../validators/user.validator";
 import User from "../../core/entity/user.entity";
-import { createError } from "../../frameworks/utils/createError";
+import { createError } from "../../core/utils/createError";
 import { Request, Response } from "express";
 import CreateUser from "../../core/useCase/createUser";
 import LoginUser from "../../core/useCase/loginUser";
-import { generateAccessToken, generateRefreshToken } from "../../frameworks/utils/jwt";
+import { generateAccessToken, generateRefreshToken } from "../../core/utils/jwt";
 import { IUserDocument } from "../../frameworks/database/models/userSchema";
 import { RequestUser } from "../../frameworks/webserver/routes/index.routes";
 
