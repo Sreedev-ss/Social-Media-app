@@ -8,8 +8,8 @@ class GetPosts {
         this.postRepository = postRepository;
     }
 
-    async find(): Promise<Array<IPost> | null> {
-        const data = await this.postRepository.findPost();
+    async find(userId:string | null): Promise<Array<IPost> | null> {
+        const data = await this.postRepository.findPost(userId);
         return data;
     }
 

@@ -15,8 +15,8 @@ class PostRepository implements IPostRepository {
         return createdPost;
     }
 
-    async findPost(): Promise<Array<IPost> | null> {
-        const allPosts = await this.PostModel.find({})
+    async findPost(userId:string): Promise<Array<IPost> | null> {
+        const allPosts = await this.PostModel.find({userId:userId})
         return allPosts;
     }
 

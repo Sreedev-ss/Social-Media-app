@@ -1,11 +1,12 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import CreatePost from "../../core/useCase/createPost";
 import UploadMedia from "../../core/useCase/uploadMedia";
 import { randomImageName } from "../../core/utils/randomName";
-import Post, { IPost } from "../../core/entity/post.entity";
+import Post from "../../core/entity/post.entity";
 import { createError } from "../../core/utils/createError";
 import GetPosts from "../../core/useCase/getPosts";
 import GetSignedMediaUrl from "../../core/useCase/getSignedMediaUrl";
+import { RequestUser } from "../../frameworks/webserver/routes/index.routes";
 
 class PostController {
     private createPost: CreatePost;
@@ -20,9 +21,9 @@ class PostController {
         this.getSignedUrl = getSignedUrl;
     }
 
-    async addPost(req: Request, res: Response): Promise<any> {
-        const { userId, content } = req.body;
-
+    async addPost(req: RequestUser, res: Response): Promise<any> {
+        const { content } = req.body;
+        const userId = req.user
         if (userId == undefined) {
             createError("BAD_REQUEST", "UserId is needed")
         }
@@ -46,10 +47,9 @@ class PostController {
         }
     }
 
-    async findPost(req: Request, res: Response): Promise<any> {
-        const allPosts = await this.getPost.find();
-        console.log(allPosts);
-        
+    async findPost(req: RequestUser, res: Response): Promise<any> {
+        const userId = req.user
+        const allPosts = await this.getPost.find(userId);
         const bucketName = process.env.BUCKET_NAME
         try {
             for (const post of allPosts) {

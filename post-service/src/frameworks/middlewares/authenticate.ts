@@ -16,8 +16,7 @@ export const authenticate = (req: RequestUser, res: Response, next: NextFunction
     try {
         const decoded = verifyAccessToken(token) as CustomJwtPayload;
         req.user = decoded.user;
-  
-        console.log(new Date(req.user.exp * 1000).toLocaleString())
+        console.log(new Date(decoded.exp * 1000).toLocaleString())
         next();
     } catch (error) {
         res.status(403).json({ message: 'Forbidden' });
@@ -31,7 +30,7 @@ export const isLoggedIn = (req: RequestUser, res: Response, next: NextFunction) 
     }
     try {
       const decoded = verifyAccessToken(token) as CustomJwtPayload;
-      req.user = decoded.user;  
+      req.user = decoded.user; 
       next();
     } catch (err) {
       return next(); 
